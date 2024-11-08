@@ -1,0 +1,281 @@
+CommonServices:
+  runSystematics: false
+  # systematicsHistogram: 'listOfSystematics'
+  # filterSystematics: "^(?=.*(?:GEN_muR_)|$).*" # 410470 ttbar
+  # filterSystematics: "^(?=.*(?:PDF260000)|$).*" # 410470 ttgamma
+  # filterSystematics: "^(?=.*(?:PDF260400)|$).*" # 523150 tqy
+
+PileupReweighting: {}
+
+EventCleaning:
+    runEventCleaning: True
+
+GeneratorLevelAnalysis: {}
+
+Jets:
+  - containerName: 'AnaJets'
+    jetCollection: 'AntiKt4EMPFlowJets'
+    runNNJvtUpdate: True
+    systematicsModelJES: 'Category'
+    systematicsModelJER: 'Full'
+    JVT: {}
+    PtEtaSelection:
+        minPt: 25000.0
+        maxEta: 4.5
+    FlavourTagging:
+      - btagger: 'DL1dv01'
+        btagWP: 'FixedCutBEff_85'
+        generator: 'autoconfig'
+      - btagger: 'DL1dv01'
+        btagWP: 'FixedCutBEff_77'
+        generator: 'autoconfig'
+      - btagger: 'DL1dv01'
+        btagWP: 'FixedCutBEff_70'
+        generator: 'autoconfig'
+      - btagger: 'DL1dv01'
+        btagWP: 'FixedCutBEff_60'
+        generator: 'autoconfig'
+      - btagger: 'DL1dv01'
+        btagWP: 'Continuous'
+        generator: 'autoconfig'
+    FlavourTaggingEventSF:
+      - containerName: 'AnaJets.baselineJvt'
+        btagger: 'DL1dv01'
+        btagWP: 'Continuous'
+      - containerName: 'AnaJets.baselineJvt'
+        btagger: 'DL1dv01'
+        btagWP: 'FixedCutBEff_60'
+      - containerName: 'AnaJets.baselineJvt'
+        btagger: 'DL1dv01'
+        btagWP: 'FixedCutBEff_70'
+      - containerName: 'AnaJets.baselineJvt'
+        btagger: 'DL1dv01'
+        btagWP: 'FixedCutBEff_77'
+      - containerName: 'AnaJets.baselineJvt'
+        btagger: 'DL1dv01'
+        btagWP: 'FixedCutBEff_85'
+
+#PerEventSF:
+#  - algoName: 'btagSFCalc_DL1dv01_Continuous'
+#    particles: 'AnaJets.baselineJvt'
+#    objectSF: 'ftag_effSF_DL1dv01_Continuous_%SYS%'
+#    eventSF: 'btagSF_DL1dv01_Continuous_%SYS%'
+
+Electrons:
+  - containerName: 'AnaElectrons'
+    crackVeto: True
+    forceFullSimConfig: True # only correct while no fast sim recommendations are available
+    WorkingPoint:
+      - selectionName: 'tight'
+        identificationWP: 'TightLH'
+        isolationWP: 'Tight_VarRad'
+        noEffSF: True
+    PtEtaSelection:
+        minPt: 28000.0
+        maxEta: 2.47
+        useClusterEta: True
+
+Muons:
+  - containerName: 'AnaMuons'
+    WorkingPoint:
+      - selectionName: 'tight'
+        quality: 'Medium'
+        isolation: 'Tight_VarRad'
+    PtEtaSelection:
+        minPt: 28000.0
+        maxEta: 2.5
+
+Photons:
+  - containerName: 'AnaPhotons'
+    ExtraVariables: {}
+    forceFullSimConfig: True # only correct while no fast sim recommendations are available 
+    crackVeto: True
+    WorkingPoint:
+#      - selectionName: 'loose'
+#        qualityWP: 'Loose'
+#        isolationWP: 'NonIso'
+#        noEffSF: True
+      - selectionName: 'tight'
+        qualityWP: 'Tight'
+        isolationWP: 'FixedCutTight'
+        noEffSF: True
+    PtEtaSelection:
+        minPt: 20000.0
+        maxEta: 2.37
+        useClusterEta: True 
+
+MissingET:
+  - containerName: 'AnaMET'
+    jets: 'AnaJets'
+    electrons: 'AnaElectrons.tight'
+    muons: 'AnaMuons.tight'
+    photons: 'AnaPhotons.tight'
+    
+OverlapRemoval:
+  - inputLabel: 'preselectORtight'
+    outputLabel: 'passesORtight'
+    jets: 'AnaJets.baselineJvt'
+    electrons: 'AnaElectrons.tight'
+    muons: 'AnaMuons.tight'
+    photons: 'AnaPhotons.tight'
+#    jetsSelectionName: 'baselineJvt'
+#    electronsSelectionName: 'tight'
+#    muonsSelectionName: 'tight'
+#    photonsSelectionName: 'tight'
+#  - inputLabel: 'preselectORloose'
+#    outputLabel: 'passesORloose'
+#    jets: 'AnaJets.baselineJvt'
+#    electrons: 'AnaElectrons.tight'
+#    muons: 'AnaMuons.tight'
+#    photons: 'AnaPhotons.loose'
+#    jetsSelectionName: 'baselineJvtLoose'
+#    electronsSelectionName: 'tight'
+#    muonsSelectionName: 'tight'
+#    photonsSelectionName: 'loose'
+#    selectionName: 'notuseful'
+#    addToAllSelections: False  
+
+# VGammaOR:
+#  dR_lepton_photon_cuts: [0.2] # those values correct?
+#  photon_pT_cuts: [15000.0]
+#  removeInOverlap: [410644,410645,410658,410659,601352,601355,410470,600666,600667,700320,700321,700322,700323,700324,700325,700326,700327,700328,700329,700330,700331,700332,700333,700334,506193,506194,506195,512198,512199,512200,700338,700339,700340,700341,700342,700343,700344,700345,700346,700347,700348,700349]
+#  keepInOverlap: [523150,523588,523589,504554,500800,700399,700398,700400,700403,700402,700404]
+
+ObjectCutFlow:
+  - containerName: 'AnaElectrons'
+    selectionName: 'tight'
+  - containerName: 'AnaMuons'
+    selectionName: 'tight'
+  - containerName: 'AnaPhotons'
+    selectionName: 'tight'
+  - containerName: 'AnaJets'
+    selectionName: 'baselineJvt'
+
+Thinning:
+  - containerName: 'AnaJets'
+    outputName: 'OutJets'
+    selectionName: 'baselineJvt'
+  - containerName: 'AnaElectrons'
+    outputName: 'OutElectrons'
+    selectionName: 'tight'
+  - containerName: 'AnaMuons'
+    outputName: 'OutMuons'
+    selectionName: 'tight'
+  - containerName: 'AnaPhotons'
+    outputName: 'OutPhotons'
+    selectionName: 'tight'
+#    selectionName: 'tight||loose'
+
+#LeptonSF: // photon SF did also not work
+#  - muons: 'AnaMuons.tight'
+##    electrons: 'AnaElectrons.tight' # casuses error SG::ExcBadAuxVar: Attempt to retrieve nonexistent aux data item `::el_reco_effSF_tight_NOSYS' (1097).
+##    photons: 'AnaPhotons.tight'
+#    lepton_postfix: 'tight' 
+##  - electrons: 'AnaElectrons.tight'
+##    muons: 'AnaMuons.tight'
+##    photons: 'AnaPhotons.loose'
+##    lepton_postfix: 'loose'
+
+Trigger:
+    triggerChainsPerYear:
+        '2015':
+            - 'HLT_e24_lhmedium_L1EM20VH || HLT_e60_lhmedium || HLT_e120_lhloose'
+            - 'HLT_mu20_iloose_L1MU15 || HLT_mu40'
+        '2016':
+            - 'HLT_e26_lhtight_nod0_ivarloose || HLT_e60_lhmedium_nod0 || HLT_e140_lhloose_nod0'
+            - 'HLT_mu26_ivarmedium || HLT_mu50'
+        '2017':
+            - 'HLT_e26_lhtight_nod0_ivarloose || HLT_e60_lhmedium_nod0 || HLT_e140_lhloose_nod0'
+            - 'HLT_mu26_ivarmedium || HLT_mu50'
+        '2018':
+            - 'HLT_e26_lhtight_nod0_ivarloose || HLT_e60_lhmedium_nod0 || HLT_e140_lhloose_nod0'
+            - 'HLT_mu26_ivarmedium || HLT_mu50'
+    noFilter: False
+    electrons: 'AnaElectrons.tight'
+    electronID: 'Tight'
+    electronIsol: 'Tight_VarRad'
+    muons: 'AnaMuons.tight'
+    muonID: 'Medium'
+
+EventSelection:
+  - electrons: 'AnaElectrons.tight'
+    jets: 'AnaJets.baselineJvt'
+    muons: 'AnaMuons.tight'
+    photons: 'AnaPhotons.tight'
+#    photons: 'AnaPhotons.tight||loose'
+    noFilter: False
+    cutFlowHistograms: True
+    selectionCutsDict:
+      'SUBpre_selection': |
+        GLOBALTRIGMATCH
+        JET_N 25000 >= 1
+        SUM_EL_N_MU_N 27000 == 1
+        PH_N 20000 >= 1        
+        SAVE
+      # 'inclusive_SR': |
+      #   IMPORT SUBpre_selection
+      #   JET_N_BTAG DL1dv01:FixedCutBEff_70 == 1 
+      #   JET_N_BTAG DL1dv01:FixedCutBEff_85 == 1
+      #   SAVE
+      'tqy_stitching': |
+        IMPORT SUBpre_selection
+        JET_N_BTAG DL1dv01:FixedCutBEff_70 == 1 
+        JET_N_BTAG DL1dv01:FixedCutBEff_85 == 1
+        SAVE
+      # 'hfake' : |
+      #   IMPORT SUBpre_selection
+      #   JET_N_BTAG DL1dv01:FixedCutBEff_70 == 1
+      #   SAVE
+
+# After configuring each container, many variables will be saved automatically.
+Output:
+  treeName: 'reco'
+  vars:
+    - OutPhotons_NOSYS.DFCommonPhotonsIsEMTightIsEMValue -> ph_isEM_Tight
+    - OutPhotons_NOSYS.ptcone20 -> ph_ptcone20
+    - OutPhotons_NOSYS.topoetcone20 -> ph_topoetcone20
+    - OutPhotons_NOSYS.topoetcone40 -> ph_topoetcone  
+  metVars: []
+  varsOnlyForMC: 
+    - OutPhotons_NOSYS.truthOrigin -> ph_truthOrigin
+    - OutPhotons_NOSYS.truthType -> ph_truthType  
+  containers:
+      # Format should follow: '<suffix>:<output container>'
+      el_: 'OutElectrons'
+      jet_: 'OutJets'
+      mu_: 'OutMuons'
+      ph_: 'OutPhotons'      
+      met_: 'AnaMET'
+      '': 'EventInfo'
+  commands:
+    # Turn output branches on and off with 'enable' and 'disable'
+    - disable jet_.*_eff.*
+    - disable jet_jvtEfficiency.*
+    - disable trigPassed_HLT.*
+    # - disable pass_SUB*
+    # - disable el_isol_effSF*
+    # - disable el_id_effSF*
+    # - disable mu_reco_effSF*
+    # - disable mu_isol_effSF*
+    - disable jet_select*
+    - disable el_select*
+    - disable mu_select*
+    - disable mu_charge
+    # - disable jet_*
+    # - disable e_*
+    # - disable mu_*
+    # - disable btag_*
+    # - disable met_*
+    # todo find more branches to disable
+    # per lepton (jets ie. btagging, maybe photons) SFs, only care about event SFs
+    
+
+# AddConfigBlocks:
+#     - modulePath: 'TopCPToolkit.LeptonSFCalculatorConfig'
+#       functionName: 'LeptonSFCalculatorConfig'
+#       algName: 'LeptonSF'
+#       pos: 'Output'
+#     - modulePath: 'TopCPToolkit.particleLevelConfig'
+#       functionName: 'particleLevelConfig'
+#       algName: 'ParticleLevel'
+#       pos: 'Output'  

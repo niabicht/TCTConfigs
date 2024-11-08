@@ -1,0 +1,24 @@
+CommonServices: {}
+
+GeneratorLevelAnalysis: {}
+
+PartonHistory:
+  - histories: 'Tqgamma'
+
+# After configuring each container, many variables will be saved automatically.
+Output:
+  treeName: 'truth'
+  vars:
+    - 'EventInfo.mcChannelNumber -> mcChannelNumber'
+    - 'EventInfo.runNumber -> runNumber'
+    - 'EventInfo.eventNumber -> eventNumber'
+  containers:
+      # Format should follow: '<suffix>:<output container>'
+      '': 'EventInfo'
+      'Tqy_': 'PartonHistoryTqgamma'
+
+AddConfigBlocks:
+    - modulePath: 'TopCPToolkit.truthConfig'
+      functionName: 'truthConfig'
+      algName: 'PartonHistory'
+      pos: 'Output'
